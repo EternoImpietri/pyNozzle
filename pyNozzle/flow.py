@@ -9,7 +9,8 @@ class Flow :
         T_0 : float, 
         p_0 : float, 
         nozzle : Nozzle,
-        substance : str):
+        substance : str
+    ):
         
         self.T_0 = T_0
         self.p_0 = p_0
@@ -22,7 +23,8 @@ class IsentropicFlow(Flow) :
         T_0 : float, 
         p_0 : float, 
         nozzle : Nozzle,
-        substance : str):
+        substance : str
+    ):
         
         super.__init__(T_0, p_0, nozzle, substance)
     
@@ -39,6 +41,7 @@ class CFDFlow(Flow):
         T_0 : float, 
         p_0 : float, 
         nozzle : Nozzle,
-        substance : str):
+        substance : str
+    ):
         
         super.__init__(T_0, p_0, nozzle, substance)

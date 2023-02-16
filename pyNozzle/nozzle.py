@@ -53,7 +53,8 @@ class ConicalNozzle(Nozzle):
         D_e : float,
         alpha: float,
         beta : float,
-        unit : str):
+        unit : str
+    ):
 
         super().__init__(D_0, D_t, D_e, unit)
         self.alpha = alpha
