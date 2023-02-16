@@ -65,9 +65,11 @@ class Substance :
         
     def display_phase_diagram(
         self,
-        T_min = None,
-        T_max = None,
-        scale = 'log' 
+        T_min : float = None,
+        T_max : float = None,
+        p_min : float = None,
+        p_max : float = None,
+        scale : str = 'log' 
     ):
 
         fig, ax = plt.subplots()
@@ -93,6 +95,9 @@ class Substance :
 
         ax.set_yscale(scale)
 
+        ax.set_xlim(left = T_min, right = T_max)
+        ax.set_ylim(bottom = p_min, top = p_max)
+        
         if scale == "log":
             ax.yaxis.get_major_locator().set_params(numticks=99)
             ax.yaxis.get_minor_locator().set_params(numticks=99, subs=[.2, .4, .6, .8])
