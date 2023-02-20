@@ -64,6 +64,11 @@ class Substance :
         H_L = CP.CoolProp.PropsSI('H', 'T', T, 'Q', 0, self.name)
         H_V = CP.CoolProp.PropsSI('H', 'T', T, 'Q', 1, self.name)
         return H_V-H_L
+    
+    def get_saturated_pressure(self, 
+        T : float 
+    ):
+        return CP.CoolProp.PropsSI('P', 'T', T, 'Q', 1 ,self.name)
 
     def get_vaporization_curve(self):
         T = np.arange(self.T_triple,self.T_crit,1)
