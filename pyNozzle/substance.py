@@ -35,6 +35,36 @@ class Substance :
     def p_triple(self):
         return CP.CoolProp.PropsSI('P_TRIPLE', self.name)
 
+    def get_heat_capacity_ratio(self, 
+        T : float,
+        Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
+    ):
+
+        C_p = CP.CoolProp.PropsSI('CPMASS', 'T', T, 'Q', Q, self.name)
+        C_v = CP.CoolProp.PropsSI('CVMASS', 'T', T, 'Q', Q, self.name)
+        return C_p/C_v
+    
+    def get_isentropic_expansion_coefficient(self, 
+        T : float,
+        Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
+    ):
+
+        return CP.CoolProp.PropsSI('isentropic_expansion_coefficient', 'T', T, 'Q', 1, self.name)
+
+    def get_viscosity(self, 
+        T : float,
+        Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
+    ):
+
+        return CP.CoolProp.PropsSI('V', 'T', T, 'Q', 1, self.name)
+
+    def get_enthalpy_vaporization(self,
+        T : float
+    ): 
+        H_L = CP.CoolProp.PropsSI('H', 'T', T, 'Q', 0, self.name)
+        H_V = CP.CoolProp.PropsSI('H', 'T', T, 'Q', 1, self.name)
+        return H_V-H_L
+
     def get_vaporization_curve(self):
         T = np.arange(self.T_triple,self.T_crit,1)
         P = np.array([CP.CoolProp.PropsSI('P', 'T', t, 'Q', 1 ,self.name) for t in T])
