@@ -71,11 +71,7 @@ class IsentropicFlow(Flow) :
 
         # -------------------------------- Performance ------------------------------- #
 
-        if type(self.nozzle) is ConicalNozzle:
-            F_1 = m_dot*v_e*self.nozzle.correction
-        else : 
-            F_1 = m_dot*v_e
-    
+        F_1 = m_dot*v_e*self.nozzle.correction
         F_2 = (p_e-p_a)*A_e
         F_total = (F_1 + F_2)
         C_F = F_total/(A_t*p_0)
@@ -83,9 +79,26 @@ class IsentropicFlow(Flow) :
         Isp = F_total/(m_dot*9.80665)
 
         print("Simple calculation - End")
-        return F_total, Isp, m_dot
+        return F_total, Isp, m_dot, T_e, p_e
 
+    def iterative_simple_calculation(self,
+        p_a : float = 0,
+        points : int = 20,
+    ):
+        if type(self.nozzle) is Nozzle:
+            raise AssertionError("Must specify which kind of nozzle")
+        
+        p = [self.p_0]
+        T = [self.T_0]
+        x, y = self.nozzle.get_envelope_divergent(points)
+        for i in range(points):
+            self.nozzle.D_e = 2*y[i]
+            _, _, _, T_e, p_e = self.simple_calculation(p_a = p_a)
+            p.append(p_e)
+            T.append(T_e)
+        return p, T
 
+        
 
 class CFDFlow(Flow):
     # https://nbviewer.org/github/barbagroup/CFDPython/blob/master/lessons/14_Step_11.ipynb

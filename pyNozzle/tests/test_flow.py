@@ -3,6 +3,8 @@ from pyNozzle.substance import Substance
 from pyNozzle.flow import Flow, IsentropicFlow
 
 import math
+import matplotlib.pyplot as plt
+
 def test_flow():
     water = Substance('Water')
     nozzle = ConicalNozzle(1e-3*0.5, 1e-3*0.4, 1e-3*2*math.tan(math.radians(30))*4.15+1e-3*0.4, 30, 30, 'm')
@@ -10,4 +12,7 @@ def test_flow():
     return flow
 
 flow = test_flow()
-a, b, c = flow.simple_calculation()
+# a, b, c, d, e = flow.simple_calculation()
+print(flow.nozzle.D_e)
+p, T = flow.iterative_simple_calculation()
+print(flow.nozzle.D_e)

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class Nozzle:
+class Nozzle():
 
     def __init__(
         self, 
@@ -43,6 +43,10 @@ class Nozzle:
         """ Expansion ratio """
         return self.A_e/self.A_t
     
+    @property
+    def correction(self):
+        return 1
+    
 
 class ConicalNozzle(Nozzle):
 
@@ -78,6 +82,20 @@ class ConicalNozzle(Nozzle):
     def correction(self):
         """ Conical nozzle correction factor """
         return (1+math.cos(math.radians(self.alpha)))/2
+    
+    def get_envelope_convergent(self,
+        points : int
+    ):
+        x = np.linspace(0,self.l,10)
+        y = self.D_0/2 - x*math.tan(math.radians(self.beta))
+        return x, y
+
+    def get_envelope_divergent(self,
+        points : int
+    ):
+        x = np.linspace(0,self.L,points)
+        y = self.D_t/2 + x*math.tan(math.radians(self.alpha))
+        return x + self.l, y
 
     def display(self):
         """ Display, trough matplotlib, a representation of the nozzle """
@@ -90,16 +108,14 @@ class ConicalNozzle(Nozzle):
         ax.plot(x, -y, 'k')
 
         # Convergent
-        x = np.linspace(0,self.l,10)
-        y = self.D_0/2 - x*math.tan(math.radians(self.beta))
+        x, y = self.get_envelope_convergent(10)
         ax.plot(x, y, 'k')
         ax.plot(x, -y, 'k')
 
         # Divergent 
-        x = np.linspace(0,self.L,10)
-        y = self.D_t/2 + x*math.tan(math.radians(self.alpha))
-        ax.plot(x + self.l, y, 'k')
-        ax.plot(x + self.l, -y, 'k')
+        x, y = self.get_envelope_divergent(10)
+        ax.plot(x, y, 'k')
+        ax.plot(x, -y, 'k')
 
         # Settings
         ax.set_xlim(-self.D_0/2,self.l + self.L)

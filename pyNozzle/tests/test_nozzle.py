@@ -6,7 +6,7 @@ from pyNozzle.nozzle import Nozzle, ConicalNozzle
 def test_nozzle_plot():
     nozzle = ConicalNozzle(5, 3, 7, 10, 30, "mm")
     nozzle.display()
-    return 
+    return nozzle
 
-test_nozzle_plot()
+nozne = test_nozzle_plot()
 
