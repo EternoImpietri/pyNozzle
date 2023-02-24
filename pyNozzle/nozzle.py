@@ -7,18 +7,18 @@ class Nozzle():
 
     def __init__(
         self, 
-        D_0 : float, 
+        D_c : float, 
         D_t : float, 
         D_e : float,
         unit : str):
 
-        self.D_0 = D_0
+        self.D_c = D_c
         self.D_t = D_t
         self.D_e = D_e
         self.unit = unit
 
     def __str__(self):
-        return f"Nozzle : D_0 = {self.D_0}, \
+        return f"Nozzle : D_c = {self.D_c}, \
                 D_t = {self.D_t}, \
                 D_e = {self.D_e}, \
                 in {self.unit}"
@@ -26,7 +26,7 @@ class Nozzle():
     @property
     def A_p(self):
         """ Plenum chamber area"""
-        return math.pi*self.D_0**2/4
+        return math.pi*self.D_c**2/4
     
     @property
     def A_t(self):
@@ -52,7 +52,7 @@ class ConicalNozzle(Nozzle):
 
     def __init__(
         self, 
-        D_0 : float, 
+        D_c : float, 
         D_t : float, 
         D_e : float,
         alpha: float,
@@ -60,18 +60,18 @@ class ConicalNozzle(Nozzle):
         unit : str
     ):
 
-        super().__init__(D_0, D_t, D_e, unit)
+        super().__init__(D_c, D_t, D_e, unit)
         self.alpha = alpha
         self.beta = beta
     
     def __str__(self):
-        return f"ConicalNozzle : D_0 = {self.D_0}, D_t = {self.D_t}, D_e = {self.D_e}," +\
+        return f"ConicalNozzle : D_c = {self.D_c}, D_t = {self.D_t}, D_e = {self.D_e}," +\
             f" \u03B1 = {self.alpha}°, \u03B2 = {self.beta}°, unit = {self.unit}"
         
     @property
     def l(self):
         """ Length of convergent section """
-        return (self.D_0-self.D_t)/2/math.tan(math.radians(self.beta))
+        return (self.D_c-self.D_t)/2/math.tan(math.radians(self.beta))
     
     @property
     def L(self):
@@ -84,26 +84,28 @@ class ConicalNozzle(Nozzle):
         return (1+math.cos(math.radians(self.alpha)))/2
     
     def get_envelope_convergent(self,
-        points : int
+        points : int = 10
     ):
-        x = np.linspace(0,self.l,10)
-        y = self.D_0/2 - x*math.tan(math.radians(self.beta))
+        x = np.linspace(0, self.l, points)
+        y = self.D_c/2 - x*math.tan(math.radians(self.beta))
         return x, y
 
     def get_envelope_divergent(self,
-        points : int
+        points : int = 10
     ):
-        x = np.linspace(0,self.L,points)
+        x = np.linspace(0, self.L, points)
         y = self.D_t/2 + x*math.tan(math.radians(self.alpha))
         return x + self.l, y
 
-    def display(self):
+    def display(self,
+        show : bool = True
+    ):
         """ Display, trough matplotlib, a representation of the nozzle """
         fig, ax = plt.subplots()
 
         # Plenum 
-        x = np.linspace(-self.D_0/2,0,10)
-        y = np.full_like(x, self.D_0/2)
+        x = np.linspace(-self.D_c/2,0,10)
+        y = np.full_like(x, self.D_c/2)
         ax.plot(x, y, 'k')
         ax.plot(x, -y, 'k')
 
@@ -118,14 +120,15 @@ class ConicalNozzle(Nozzle):
         ax.plot(x, -y, 'k')
 
         # Settings
-        ax.set_xlim(-self.D_0/2,self.l + self.L)
+        ax.set_xlim(-self.D_c/2,self.l + self.L)
         ax.set_xlabel(f"x / {self.unit}")
         ax.set_ylabel(f"y / {self.unit}")
 
         ax.spines[['right', 'top']].set_visible(False)
         ax.set_aspect('equal')
-
-        plt.tight_layout()
-        plt.show()
+        
+        if show :
+            plt.tight_layout()
+            plt.show()
         return fig,ax
 
