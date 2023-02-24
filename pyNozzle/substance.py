@@ -99,6 +99,7 @@ class Substance :
             a_1 = -13.928169
             a_2 = 34.7078238
             P = np.array([p_n*math.exp(a_1*(1-t**(-1.5)) + a_2*(1-t**(-1.25))) for t in Theta])
+
             return T, P
         else :
             raise ValueError("No sublimation curve for this substance")
