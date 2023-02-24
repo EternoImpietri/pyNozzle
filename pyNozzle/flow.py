@@ -97,6 +97,7 @@ class IsentropicFlow(Flow) :
         p = [self.p_c]
         T = [self.T_c]
         M = [0]
+        error = []
         
         # -------------------------------- Convergent -------------------------------- #
 
@@ -113,7 +114,8 @@ class IsentropicFlow(Flow) :
                 mach = opt.minimize_scalar(objective_function, 
                                          method = "bounded",
                                          bounds = (0, 1))
-                
+                error.append(abs(mach.fun))
+
                 p_e = self.p_c*(1+0.5*(k-1)*mach.x**2)**(-k/(k-1))
                 T_e = self.T_c*(1+0.5*(k-1)*mach.x**2)**(-1)
                 
@@ -137,7 +139,8 @@ class IsentropicFlow(Flow) :
                 mach = opt.minimize_scalar(objective_function, 
                                          method = "bounded",
                                          bounds = (1, 1e9))
-                
+                error.append(abs(mach.fun))
+
                 p_e = self.p_c*(1+0.5*(k-1)*mach.x**2)**(-k/(k-1))
                 T_e = self.T_c*(1+0.5*(k-1)*mach.x**2)**(-1)
                 
@@ -145,7 +148,7 @@ class IsentropicFlow(Flow) :
                 p.append(p_e)
                 M.append(mach.x)
                 bar()
-
+        print(f"Maximum error of minimizing objective function : {max(error)}")
         
         return np.concatenate((x_1,x_2)), np.array(T), np.array(p), np.array(M)
 
