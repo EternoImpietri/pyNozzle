@@ -150,7 +150,12 @@ class IsentropicFlow(Flow) :
                 bar()
         print(f"Maximum error of minimizing objective function : {max(error)}")
         
-        return np.concatenate((x_1,x_2)), np.array(T), np.array(p), np.array(M)
+        T = np.array(T)
+        p = np.array(p)
+        M = np.array(M)
+        v = M*np.sqrt(k*T*self.substance.R)
+
+        return np.concatenate((x_1,x_2)), T, p, M, v
 
 
 class CFDFlow(Flow):
