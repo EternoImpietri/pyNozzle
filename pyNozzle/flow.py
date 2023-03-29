@@ -91,13 +91,14 @@ class IsentropicFlow(Flow) :
             raise AssertionError("Must specify which kind of nozzle")
         
         k = self.substance.get_heat_capacity_ratio(self.T_c)
-        # p = [self.p_c]
-        # T = [self.T_c]
 
         p = [self.p_c]
         T = [self.T_c]
         M = [0]
+        Q = [1]
+        s = self.substance.get_entropy(self.T_c)
         error = []
+        
         
         # -------------------------------- Convergent -------------------------------- #
 
@@ -118,7 +119,14 @@ class IsentropicFlow(Flow) :
 
                 p_e = self.p_c*(1+0.5*(k-1)*mach.x**2)**(-k/(k-1))
                 T_e = self.T_c*(1+0.5*(k-1)*mach.x**2)**(-1)
-                
+                try :
+                    q = self.substance.get_Q(T_e,s)
+                    if q >= 0 :
+                        Q.append(q)
+                    else : 
+                        Q.append(None)
+                except :
+                    Q.append(None)
                 T.append(T_e)
                 p.append(p_e)
                 M.append(mach.x)
@@ -143,7 +151,14 @@ class IsentropicFlow(Flow) :
 
                 p_e = self.p_c*(1+0.5*(k-1)*mach.x**2)**(-k/(k-1))
                 T_e = self.T_c*(1+0.5*(k-1)*mach.x**2)**(-1)
-                
+                try :
+                    q = self.substance.get_Q(T_e,s)
+                    if q >= 0 :
+                        Q.append(q) 
+                    else : 
+                        Q.append(None)
+                except :
+                    Q.append(None)
                 T.append(T_e)
                 p.append(p_e)
                 M.append(mach.x)
@@ -154,8 +169,9 @@ class IsentropicFlow(Flow) :
         p = np.array(p)
         M = np.array(M)
         v = M*np.sqrt(k*T*self.substance.R)
+        Q = np.array(Q)
 
-        return np.concatenate((x_1,x_2)), T, p, M, v
+        return np.concatenate((x_1,x_2)), T, p, M, v, Q
 
 
 class CFDFlow(Flow):

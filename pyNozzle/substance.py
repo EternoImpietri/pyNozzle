@@ -49,14 +49,28 @@ class Substance :
         Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
     ):
 
-        return CP.CoolProp.PropsSI('isentropic_expansion_coefficient', 'T', T, 'Q', 1, self.name)
+        return CP.CoolProp.PropsSI('isentropic_expansion_coefficient', 'T', T, 'Q', Q, self.name)
 
+    def get_entropy(self, 
+        T : float,
+        Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
+    ):
+
+        return CP.CoolProp.PropsSI('Smass', 'T', T, 'Q', Q, self.name)
+    
+    def get_Q(self, 
+        T : float,
+        Smass : float
+    ):
+
+        return CP.CoolProp.PropsSI('Q', 'T', T, 'Smass', Smass, self.name)
+    
     def get_viscosity(self, 
         T : float,
         Q : bool = 1 # Phase, 1 : Vapor, 0 : Liquid
     ):
 
-        return CP.CoolProp.PropsSI('V', 'T', T, 'Q', 1, self.name)
+        return CP.CoolProp.PropsSI('V', 'T', T, 'Q', Q, self.name)
 
     def get_enthalpy_vaporization(self,
         T : float
@@ -147,3 +161,5 @@ class Substance :
         plt.tight_layout()
         plt.show()
         return fig, ax
+    
+    

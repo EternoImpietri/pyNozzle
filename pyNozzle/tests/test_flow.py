@@ -18,7 +18,7 @@ def test_flow():
 flow = test_flow()
 
 
-x, T, p, M, v = flow.iterative_simple_calculation(points=500)
+x, T, p, M, v, Q = flow.iterative_simple_calculation(points=500)
 
 
 # ------------------------------- Plot profile ------------------------------- #
@@ -43,16 +43,26 @@ ax4.plot(x, M, "g")
 ax5 = ax.twinx()
 ax5.plot(x, v, "purple")
 
+fig, ax = plt.subplots()
+a, b = flow.nozzle.get_envelope_convergent()
+ax.plot(a, b, "k")
+ax.plot(a, -b, "k")
+a, b = flow.nozzle.get_envelope_divergent()
+ax.plot(a, b, "k")
+ax.plot(a, -b, "k")
+ax2 = ax.twinx()
+ax2.plot(x, Q, "r")
+
 # ------------------------------ Plot TP diagram ----------------------------- #
 
-fig, ax = plt.subplots()
-ax.plot(T,p,'r')
-T, P = flow.substance.get_vaporization_curve()
-ax.plot(T,P,'k')
-T, P = flow.substance.get_melting_curve()
-ax.plot(T,P,'k')
-T, P = flow.substance.get_sublimation_curve()
-ax.plot(T,P,'k')
-ax.set_yscale("log")
+# fig, ax = plt.subplots()
+# ax.plot(T,p,'r')
+# T, P = flow.substance.get_vaporization_curve()
+# ax.plot(T,P,'k')
+# T, P = flow.substance.get_melting_curve()
+# ax.plot(T,P,'k')
+# T, P = flow.substance.get_sublimation_curve()
+# ax.plot(T,P,'k')
+# ax.set_yscale("log")
 
 plt.show()
